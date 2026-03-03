@@ -27,7 +27,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
   baseURL: 'https://bookish-2-1.onrender.com',
-  headless: false, // so you can see what happens while learning
+  headless: process.env.CI ? true : false, // so you can see what happens while learning
   trace: 'on-first-retry',
   screenshot: 'only-on-failure',
   video: 'retain-on-failure',
