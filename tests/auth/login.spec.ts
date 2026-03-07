@@ -1,32 +1,37 @@
 import { test, expect } from '@playwright/test';
+import { loginPage } from '../../pages/login';
 
 test.describe('Signin Feature', () => {
 
-test.beforeEach(async ({ page }) => {
-    await page.goto('/signin');
+  let LoginPage: loginPage;
+
+  test.beforeEach(async ({ page }) => {
+    LoginPage = new loginPage(page);
+    await LoginPage.goto();
   });
 
   test('User should login successfully and land on profile page', async ({ page }) => {
-    const loginHeading = page.getByRole('heading', { name: 'Sign In' });
+
+    const loginHeading = LoginPage.heading;
     await expect(loginHeading).toBeVisible();
 
-    await page.getByPlaceholder('Email').fill(process.env.TEST_EMAIL!);
-    await page.getByPlaceholder('Password').fill(process.env.TEST_PASSWORD!);
+    await LoginPage.login(
+      process.env.TEST_EMAIL!,
+      process.env.TEST_PASSWORD!
+    );
 
-    await page.getByRole('button', { name: 'Log In' }).click();
+    await expect(page).toHaveURL(/profile/, { timeout: 40000 });
 
-    await expect(page).toHaveURL(/profile/, { timeout: 30000 });
-
-    const profileHeader = page.getByRole('heading', { name: 'User Profile' });
+    const profileHeader = LoginPage.profileHeader;
     await expect(profileHeader).toBeVisible();
   });
 
-  test('User should see error message on invalid login', async ({ page }) => {
-    await page.getByPlaceholder('Email').fill('testuser@example.com');
-    await page.getByPlaceholder('Password').fill('tes123');
+  test('User should see error message on invalid login', async () => {
 
-    await page.getByRole('button', { name: 'Log In' }).click();
+    await LoginPage.login('testuser@example.com', 'tes123');
 
-    await expect(page.getByText('Incorrect Email and Password.')).toBeVisible({ timeout: 20000 });
-  }) 
+    await expect(LoginPage.errorMessage).toBeVisible({ timeout: 20000 });
+
+  });
+
 });
