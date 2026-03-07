@@ -37,3 +37,13 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+
+    - name: Publish Test Summary
+      if: always()
+      run: |
+        echo "## 🧪 Playwright Test Run Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Tests executed using Playwright." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📊 Download the **Playwright HTML Report** from the Artifacts section above." >> $GITHUB_STEP_SUMMARY
+    

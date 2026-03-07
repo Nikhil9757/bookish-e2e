@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { signupPage} from '../../pages/signup';
 
-
 test.describe('Signup Feature', () => {
 
   let signup: signupPage;
